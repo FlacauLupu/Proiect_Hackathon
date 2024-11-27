@@ -64,16 +64,21 @@ def detect_and_recognize_faces():
         cv2.imshow("Face Recognition", frame)
 
         # Save new face encoding with 's' key
-        if cv2.waitKey(1) & 0xFF == ord("s"):
-            print("Press 's' to save a face")
-            name = input("Enter name for this face: ")
-            if face_encodings:
-                save_face_encoding(name, face_encodings[0])
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("s"):
+            if(len(face_locations)>1):
+                select = int(input("Select face to save (input number): "))
+            else:
+                select = 1
+            name = input("Enter name for this face: ").strip()
+            if name:
+                save_face_encoding(name, face_encodings[len(face_locations)-select])
                 print(f"Saved face for {name}")
 
         # Exit on 'q' key
-        if cv2.waitKey(1) & 0xFF == ord("q"):
-            break
+        elif key == ord("q"):
+            print("Exiting...")
+            break   
 
     cap.release()
     cv2.destroyAllWindows()
